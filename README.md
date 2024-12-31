@@ -22,21 +22,54 @@ Check if java is installed (most important)
 
 `sudo apt-get install Jenkins`
 
+Allow HTTP traffic on port 8080
 
-Run these commands:
+Use your public Private IP of ec2 instance followed by port 8080 to run Jenkins on browser
 
+Fetch the password for login to Jenkins:
+`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
 
-`sudo apt install nodejs`
+Create new item in Jenkins
 
+Add git repo
 
-`sudo apt install npm`
+Set to puclic if repo is public
 
+If repo is private do `ssh-keygen` on linux terminal, generate id_rsa(private) and id_rsa.pub(public).
 
-`npm install`
+Paste the id_rsa.pub(public) in ssh keys of github account. This will connect github with Jenkins
 
-`node app.js`
+Do build now , This will create the app directory in Jenkins.
 
-or Run by docker compose
+Install Docker on ec2 instance:
+`sudo apt install docker.io`
 
-test
+Create a Dockerfile
+
+Give permissions to add ubuntu user to docker server:
+`sudo usermod -a -G docker $USER`
+`sudo reboot`
+
+Build a docker container for the application:
+`docker build . -t todo-app `
+
+Run the docker container:
+`docker run -d --name node-todo-app -p 8000:8000 todo-app`
+
+For automating the running of docker container through Jenkins pipeline:
+Go to Jenkins Job -> configure -> Add build steps -> Execute shell -> Add docker build and run commands
+
+If while building pipeline there is error of permission denied by docker deamon then execute following in linux machine:
+`Sudo usermod -a -G docker Jenkins`
+`Sudo systemctl restart Jenkins`
+
+Now build the pipeline and Jenkins will execute docker commands
+
+Now for running application as soon as code is pushed in github repo , install "github-integration" plugin in Jenkins
+
+Connect github with Jenkins using ssh key
+
+Add a webhook in github where the payload url will be Jenkins url
+
+This will trigger the Jenkins pipeline as soon as code is pushed in github repo
 
