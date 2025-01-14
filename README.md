@@ -40,9 +40,9 @@ This project automates the deployment of a **To-Do Application** using **Jenkins
 
 ---
 
-#### Step 4: **Allow HTTP Traffic on Port 8080 and access Jenkins Web Interfac**
+#### Step 4: **Allow HTTP Traffic on Port 8080 and access Jenkins Web Interface**
 1. Make sure the security group of your EC2 instance allows inbound traffic on port 8080.
-2. Open your browser and access Jenkins by navigating to http://<your-ec2-public-ip>:8080
+2. Open your browser and access Jenkins by navigating to http://(your-ec2-public-ip):8080
 
 ---
 
@@ -75,7 +75,38 @@ This project automates the deployment of a **To-Do Application** using **Jenkins
 Run the following command to install Docker:
    ```bash
    sudo apt install docker.io
-3. Copy the password and paste it in the Jenkins web interface to complete the setup
+2. Add Ubuntu User to Docker Group:
+   ```bash
+   sudo usermod -a -G docker $USER
+   sudo reboot
+3. Create Dockerfile for Application
+
+---
+
+#### Step 8: **Automate Docker Container Execution with Jenkins**
+1. **Create a New Jenkins Job**:  
+   Go to Jenkins Job → **Configure** → **Add Build Step** → Select **Execute Shell**.
+2. Add Docker Build and Run Commands:
+   ```bash
+   docker build . -t todo-app
+   docker run -d --name node-todo-app -p 8000:8000 todo-app
+3. If you face permission issues while building the pipeline, execute the following on you ec2 linux terminal:
+   ```bash
+   sudo usermod -a -G docker jenkins
+   sudo systemctl restart jenkins
+4. Build the Pipeline
+
+---
+
+#### Step 9: **Set Up GitHub Webhook for Automatic Deployments**
+1. Install the **GitHub Integration** plugin in Jenkins to automate triggers from GitHub.
+2. Add the SSH key in Jenkins (similar to how it was done in **Step 6**).
+3. Go to your GitHub repository → Settings → Webhooks → Add webhook.
+4. Set the Payload URL to the Jenkins server URL (e.g., `http://(your-ec2-public-ip):8080/github-webhook/`).
+5. Set the Content type to `application/json`.
+6. Set Events to `push` to trigger Jenkins builds when code is pushed to GitHub.
+
+   
 
 
 
