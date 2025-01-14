@@ -68,6 +68,15 @@ This project automates the deployment of a **To-Do Application** using **Jenkins
 3. **Build the Application**:
    After setting up the GitHub repository in Jenkins, click **Build Now** to test if the Jenkins job can pull the repository and create the app directory.
 
+---
+
+#### Step 7: **Install Docker on EC2 Instance**
+1. Install Docker:
+Run the following command to install Docker:
+   ```bash
+   sudo apt install docker.io
+3. Copy the password and paste it in the Jenkins web interface to complete the setup
+
 
 
 
